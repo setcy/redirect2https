@@ -2,11 +2,10 @@ package plugindemo_test
 
 import (
 	"context"
+	"github.com/sunalwaysknows/redirect2https"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/traefik/plugindemo"
 )
 
 func TestDemo(t *testing.T) {

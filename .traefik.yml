@@ -1,10 +1,10 @@
-displayName: Demo Plugin
+displayName: redirect to https Plugin
 type: middleware
 iconPath: .assets/icon.png
 
-import: github.com/traefik/plugindemo
+import: github.com/sunalwaysknows/redirect2https
 
-summary: '[Demo] Add Request Header'
+summary: 'redirect to https'
 
 testData:
   Headers:
