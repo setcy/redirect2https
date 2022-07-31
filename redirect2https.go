@@ -3,7 +3,7 @@ package redirect2https
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -40,11 +40,13 @@ func (a *Server) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		a.next.ServeHTTP(rw, req)
 		return
 	} else {
-		resp, _ := json.Marshal(req)
+		resp := fmt.Sprintf("%+v", req)
 		if a.config.permanent {
-			_, _ = rw.Write(resp)
+			_, _ = rw.Write([]byte(resp))
+			rw.WriteHeader(http.StatusOK)
 		} else {
-			_, _ = rw.Write(resp)
+			_, _ = rw.Write([]byte(resp))
+			rw.WriteHeader(http.StatusOK)
 		}
 		return
 	}
