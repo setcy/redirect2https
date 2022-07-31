@@ -38,17 +38,13 @@ func (a *Server) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if req.URL.Scheme == "https" {
 		a.next.ServeHTTP(rw, req)
 		return
-	} else if req.URL.Scheme == "http" {
-		if a.config.permanent {
-			rw.WriteHeader(http.StatusMovedPermanently)
-		} else {
-			rw.WriteHeader(http.StatusFound)
-		}
-		req.URL.Scheme = "https"
-		rw.Header().Set("Location", req.URL.String())
-		return
 	} else {
-		rw.WriteHeader(http.StatusBadRequest)
+		req.URL.Scheme = "https"
+		if a.config.permanent {
+			http.Redirect(rw, req, req.URL.String(), http.StatusMovedPermanently)
+		} else {
+			http.Redirect(rw, req, req.URL.String(), http.StatusFound)
+		}
 		return
 	}
 }
