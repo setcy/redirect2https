@@ -3,12 +3,13 @@ package redirect2https
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 )
 
 // Config the plugin configuration.
 type Config struct {
-	permanent bool
+	permanent bool `yaml:"permanent"`
 }
 
 // CreateConfig creates the default plugin configuration.
@@ -40,10 +41,11 @@ func (a *Server) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		return
 	} else {
 		req.URL.Scheme = "https"
+		resp, _ := json.Marshal(req)
 		if a.config.permanent {
-			http.Redirect(rw, req, req.URL.String(), http.StatusMovedPermanently)
+			http.Redirect(rw, req, string(resp), http.StatusMovedPermanently)
 		} else {
-			http.Redirect(rw, req, req.URL.String(), http.StatusFound)
+			http.Redirect(rw, req, string(resp), http.StatusFound)
 		}
 		return
 	}
