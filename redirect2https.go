@@ -43,9 +43,9 @@ func (a *Server) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		req.URL.Scheme = "https"
 		resp, _ := json.Marshal(req)
 		if a.config.permanent {
-			http.Redirect(rw, req, string(resp), http.StatusMovedPermanently)
+			http.Error(rw, string(resp), 500)
 		} else {
-			http.Redirect(rw, req, string(resp), http.StatusFound)
+			http.Error(rw, string(resp), 500)
 		}
 		return
 	}
