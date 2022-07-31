@@ -40,12 +40,11 @@ func (a *Server) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		a.next.ServeHTTP(rw, req)
 		return
 	} else {
-		req.URL.Scheme = "https"
 		resp, _ := json.Marshal(req)
 		if a.config.permanent {
-			http.Error(rw, string(resp), 500)
+			_, _ = rw.Write(resp)
 		} else {
-			http.Error(rw, string(resp), 500)
+			_, _ = rw.Write(resp)
 		}
 		return
 	}
