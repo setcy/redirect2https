@@ -1,12 +1,10 @@
 displayName: redirect to https Plugin
 type: middleware
-iconPath: .assets/icon.png
+iconPath: .assets/icon.jpeg
 
 import: github.com/sunalwaysknows/redirect2https
 
 summary: 'redirect to https'
 
 testData:
-  Headers:
-    X-Demo: test
-    X-URL: '{{URL}}'
+  permanent: true
