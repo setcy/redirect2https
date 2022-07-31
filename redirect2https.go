@@ -36,18 +36,18 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 }
 
 func (a *Server) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	if req.URL.Scheme == "https" {
-		a.next.ServeHTTP(rw, req)
+	if req.Header.Get("X-Forwarded-Proto") == "http" {
+		host := req.Header.Get("X-Forwarded-Host")
+		path := req.URL.String()
+		port := req.Header.Get("X-Forwarded-Port")
+		if port != "" && port != "443" {
+			http.Redirect(rw, req, fmt.Sprintf("https://%s:%s%s", host, port, path), http.StatusMovedPermanently)
+		} else {
+			http.Redirect(rw, req, fmt.Sprintf("https://%s%s", req.Host, req.URL.Path), http.StatusMovedPermanently)
+		}
 		return
 	} else {
-		resp := fmt.Sprintf("%+v", req)
-		if a.config.permanent {
-			_, _ = rw.Write([]byte(resp))
-			rw.WriteHeader(http.StatusOK)
-		} else {
-			_, _ = rw.Write([]byte(resp))
-			rw.WriteHeader(http.StatusOK)
-		}
+		a.next.ServeHTTP(rw, req)
 		return
 	}
 }
